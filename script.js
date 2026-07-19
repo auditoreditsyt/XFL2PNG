@@ -1,21 +1,20 @@
 let zipActual = null;
 
 
+// ==========================
+// ABRIR ZIP XFL
+// ==========================
 
 async function leerZIP(){
-
 
     const archivo =
     document.getElementById("zipFile").files[0];
 
 
     if(!archivo){
-
         alert("Selecciona un ZIP");
         return;
-
     }
-
 
 
     zipActual =
@@ -30,16 +29,24 @@ async function leerZIP(){
     selector.innerHTML="";
 
 
+    let cantidad=0;
 
-    let cantidad = 0;
 
 
     for(const ruta in zipActual.files){
 
 
+        let archivoZip =
+        zipActual.files[ruta];
+
+
         if(
-            ruta.startsWith("LIBRARY/") &&
-            ruta.endsWith(".xml")
+            !archivoZip.dir &&
+            (
+            ruta.toLowerCase().endsWith(".png") ||
+            ruta.toLowerCase().endsWith(".jpg") ||
+            ruta.toLowerCase().endsWith(".jpeg")
+            )
         ){
 
 
@@ -47,9 +54,10 @@ async function leerZIP(){
             document.createElement("option");
 
 
-            opcion.value = ruta;
+            opcion.value=ruta;
 
-            opcion.textContent = ruta;
+
+            opcion.textContent=ruta;
 
 
             selector.appendChild(opcion);
@@ -57,9 +65,7 @@ async function leerZIP(){
 
             cantidad++;
 
-
         }
-
 
     }
 
@@ -67,20 +73,30 @@ async function leerZIP(){
 
     document.getElementById("salida").textContent =
 
-    "Proyecto cargado correctamente\n\n" +
+    "Proyecto cargado correctamente\n\n"+
+    "Imágenes encontradas: "+
+    cantidad;
 
-    "XML encontrados: " + cantidad;
 
 
+    if(cantidad===0){
+
+        document.getElementById("salida").textContent +=
+
+        "\n\nNo se encontraron imágenes.\n"+
+        "Este XFL usa gráficos vectoriales.";
+
+    }
 
 }
 
 
 
-
+// ==========================
+// EXPORTAR PNG
+// ==========================
 
 async function convertirPNG(){
-
 
 
     if(!zipActual){
@@ -92,115 +108,112 @@ async function convertirPNG(){
 
 
 
-    const archivoXML =
+    const ruta =
 
     document.getElementById("simbolos").value;
 
 
 
-    if(!archivoXML){
+    if(!ruta){
 
-        alert("Selecciona un símbolo");
+        alert("Selecciona una imagen");
         return;
 
     }
 
 
 
-    const contenido =
+    const datos =
 
     await zipActual
-    .file(archivoXML)
-    .async("string");
+    .file(ruta)
+    .async("blob");
 
 
 
-    const canvas =
+    const url =
 
-    document.getElementById("canvas");
-
-
-
-    const ctx =
-
-    canvas.getContext("2d");
+    URL.createObjectURL(datos);
 
 
 
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    const imagen =
+    new Image();
 
 
 
-    ctx.fillStyle="black";
-
-    ctx.font="20px Arial";
-
-
-    ctx.fillText(
-        "XFL2PNG",
-        20,
-        40
-    );
+    imagen.onload=function(){
 
 
 
-    ctx.font="14px Arial";
+        const canvas =
+        document.getElementById("canvas");
+
+
+        const ctx =
+        canvas.getContext("2d");
 
 
 
-    let lineas =
-    contenido.substring(0,2000)
-    .match(/.{1,80}/g);
+        canvas.width =
+        imagen.width;
+
+
+        canvas.height =
+        imagen.height;
 
 
 
-    if(lineas){
-
-
-        lineas.forEach(
-            (linea,i)=>{
-
-                ctx.fillText(
-                    linea,
-                    20,
-                    80 + i*18
-                );
-
-            }
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
         );
 
 
-    }
+
+        ctx.drawImage(
+            imagen,
+            0,
+            0
+        );
 
 
 
-    const enlace =
-    document.createElement("a");
+        const enlace =
+        document.createElement("a");
 
 
 
-    enlace.download =
+        enlace.download =
 
-    archivoXML
-    .split("/")
-    .pop()
-    .replace(".xml",".png");
-
-
-
-    enlace.href =
-
-    canvas.toDataURL("image/png");
+        ruta
+        .split("/")
+        .pop();
 
 
 
-    enlace.click();
+        enlace.href =
 
+        canvas.toDataURL(
+            "image/png"
+        );
+
+
+
+        enlace.click();
+
+
+
+        URL.revokeObjectURL(url);
+
+
+    };
+
+
+
+    imagen.src=url;
 
 
 }
