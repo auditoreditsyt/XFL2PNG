@@ -39,26 +39,28 @@ pre{
 
 <body>
 
-<h1>PRUEBA 123</h1>
+<h1>XFL2PNG</h1>
 
-<p>Selecciona un archivo XML de Adobe Animate.</p>
+<p>Selecciona un proyecto XFL (.zip)</p>
 
 <input
 type="file"
-id="xmlFile"
-accept=".xml">
+id="zipFile"
+accept=".zip">
 
 <br><br>
 
-<button onclick="leerXML()">
-Abrir XML
+<button onclick="leerZIP()">
+Abrir Proyecto
 </button>
 
 <br><br>
 
 <pre id="salida">
-Esperando archivo...
+Esperando ZIP...
 </pre>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script src="script.js"></script>
 
