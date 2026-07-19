@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>XFL2PNG</title>
+
 
 <style>
 
@@ -17,13 +19,17 @@ body{
     margin-top:60px;
 }
 
-button{
+
+button,
+select{
     padding:10px 20px;
     font-size:18px;
     cursor:pointer;
 }
 
+
 pre{
+
     text-align:left;
     width:80%;
     margin:auto;
@@ -31,38 +37,93 @@ pre{
     padding:15px;
     overflow:auto;
     white-space:pre-wrap;
+
 }
+
+
+canvas{
+
+    margin-top:20px;
+    background:white;
+
+}
+
 
 </style>
 
 </head>
 
+
 <body>
+
 
 <h1>XFL2PNG</h1>
 
+
 <p>Selecciona un proyecto XFL (.zip)</p>
+
 
 <input
 type="file"
 id="zipFile"
 accept=".zip">
 
+
 <br><br>
+
 
 <button onclick="leerZIP()">
 Abrir Proyecto
 </button>
 
+
 <br><br>
 
-<pre id="salida">
+
+<select id="simbolos">
+
+<option>
 Esperando ZIP...
+</option>
+
+</select>
+
+
+<br><br>
+
+
+<button onclick="convertirPNG()">
+Exportar PNG
+</button>
+
+
+<br><br>
+
+
+<canvas
+id="canvas"
+width="800"
+height="600">
+</canvas>
+
+
+<br><br>
+
+
+<pre id="salida">
+
+Esperando ZIP...
+
 </pre>
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
+
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
