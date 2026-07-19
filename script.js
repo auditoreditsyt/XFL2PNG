@@ -1,42 +1,45 @@
-function leerXML() {
+async function leerZIP(){
 
-    const archivo = document.getElementById("xmlFile").files[0];
+    const archivo =
+    document.getElementById("zipFile").files[0];
 
-    if (!archivo) {
-        alert("Selecciona un XML");
+    if(!archivo){
+
+        alert("Selecciona un ZIP");
+
         return;
+
     }
 
-    const lector = new FileReader();
+    const zip =
+    await JSZip.loadAsync(archivo);
 
-    lector.onload = function (e) {
+    let salida = "";
 
-        const parser = new DOMParser();
+    let encontrado = false;
 
-        const xml = parser.parseFromString(
-            e.target.result,
-            "text/xml"
-        );
+    zip.forEach(function(ruta, archivo){
 
-        const formas = xml.getElementsByTagName("DOMShape");
-        const colores = xml.getElementsByTagName("SolidColor");
+        if(ruta.startsWith("LIBRARY/")){
 
-        let texto = "";
+            encontrado = true;
 
-        texto += "DOMShape encontrados: " + formas.length + "\n";
-        texto += "Colores encontrados: " + colores.length + "\n\n";
-
-        for (let i = 0; i < colores.length; i++) {
-
-            texto += "Color " + (i + 1) + ": ";
-            texto += colores[i].getAttribute("color") + "\n";
+            salida += ruta + "\n";
 
         }
 
-        document.getElementById("salida").textContent = texto;
+    });
 
-    };
+    if(encontrado){
 
-    lector.readAsText(archivo);
+        document.getElementById("salida").textContent =
+        salida;
+
+    }else{
+
+        document.getElementById("salida").textContent =
+        "No se encontró la carpeta LIBRARY";
+
+    }
 
 }
