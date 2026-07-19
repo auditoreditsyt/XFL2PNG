@@ -27,8 +27,10 @@ function leerXML(){
 
         console.log(xml);
 
-        document.getElementById("salida").textContent =
-        e.target.result;
+        const formas = xml.getElementsByTagName("DOMShape");
+
+document.getElementById("salida").textContent =
+"DOMShape encontrados: " + formas.length;;
 
     };
 
