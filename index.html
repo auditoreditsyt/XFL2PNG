@@ -1,19 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>XFL2PNG</title>
+
+<style>
+
+body{
+    background:#111;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    margin-top:60px;
+}
+
+button{
+    padding:10px 20px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+pre{
+    text-align:left;
+    width:80%;
+    margin:auto;
+    background:#222;
+    padding:15px;
+    overflow:auto;
+    white-space:pre-wrap;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <h1>XFL2PNG</h1>
 
-<input type="file" id="xml" accept=".xml">
+<p>Selecciona un archivo XML de Adobe Animate.</p>
+
+<input
+type="file"
+id="xmlFile"
+accept=".xml">
 
 <br><br>
 
-<button>Convertir</button>
+<button onclick="leerXML()">
+Abrir XML
+</button>
+
+<br><br>
+
+<pre id="salida">
+Esperando archivo...
+</pre>
+
+<script src="script.js"></script>
 
 </body>
 </html>
