@@ -1,7 +1,6 @@
 async function leerZIP(){
 
-    const archivo =
-    document.getElementById("zipFile").files[0];
+    const archivo = document.getElementById("zipFile").files[0];
 
     if(!archivo){
 
@@ -11,35 +10,51 @@ async function leerZIP(){
 
     }
 
-    const zip =
-    await JSZip.loadAsync(archivo);
+    const zip = await JSZip.loadAsync(archivo);
+
+    const parser = new XFLParser(zip);
+
+    const renderer = new XFLRenderer();
+
+    const archivos = parser.obtenerArchivosXML();
 
     let salida = "";
 
-    let encontrado = false;
+    for(const item of archivos){
 
-    zip.forEach(function(ruta, archivo){
+        salida += item.ruta + "\n";
 
-        if(ruta.startsWith("LIBRARY/")){
+        try{
 
-            encontrado = true;
+            const canvas = await renderer.renderXML(
+                parser,
+                item.ruta
+            );
 
-            salida += ruta + "\n";
+            if(canvas){
+
+                document.body.appendChild(document.createElement("hr"));
+
+                const titulo = document.createElement("h3");
+
+                titulo.textContent = item.nombre;
+
+                document.body.appendChild(titulo);
+
+                document.body.appendChild(canvas);
+
+            }
 
         }
 
-    });
+        catch(e){
 
-    if(encontrado){
+            console.error(item.ruta,e);
 
-        document.getElementById("salida").textContent =
-        salida;
-
-    }else{
-
-        document.getElementById("salida").textContent =
-        "No se encontró la carpeta LIBRARY";
+        }
 
     }
+
+    document.getElementById("salida").textContent = salida;
 
 }
